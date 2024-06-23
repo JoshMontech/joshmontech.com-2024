@@ -141,12 +141,20 @@ export default function Home() {
       }
     };
 
+    const handleMiddleClick = (event: MouseEvent) => {
+      if (event.button === 1) {
+        event.preventDefault();
+      }
+    };
+
     window.addEventListener('wheel', handleGlobalWheel, { passive: false });
     window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('mousedown', handleMiddleClick);
 
     return () => {
       window.removeEventListener('wheel', handleGlobalWheel);
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('mousedown', handleMiddleClick);
       if (wheelTimeoutRef.current) {
         clearTimeout(wheelTimeoutRef.current);
       }
@@ -185,7 +193,7 @@ export default function Home() {
   return (
     <div className="flex flex-col md:flex-row">
       {/* Left section for desktop, header for mobile */}
-      <div className="sticky top-0 z-10 w-full md:w-[calc(50%-8px)] md:fixed md:h-screen px-4 shadow-md md:shadow-none">
+      <div className="sticky top-0 z-10 w-full md:w-[calc(30%-8px)] md:fixed md:h-screen px-4 shadow-md md:shadow-none">
         <div className="flex justify-between items-center md:flex-col md:items-start md:h-full">
           <div>
             <div className="text-lg font-bold">Joshua Montgomery</div>
@@ -215,7 +223,7 @@ export default function Home() {
       </div>
 
       {/* Main content section */}
-      <div className="md:ml-[50%] p-x4 overflow-hidden flex-1">
+      <div className="md:ml-[30%] px-4 overflow-hidden flex-1">
         <div className="mask-container">
           <div 
             ref={scrollContainerRef}
@@ -235,7 +243,7 @@ export default function Home() {
                       sectionRefs.current[categoryIndex][sectionIndex] = el;
                     }
                   }}
-                  className="min-h-screen md:min-h-[400px] border border-black bg-blue-light w-full mb-4 flex items-center justify-center text-2xl"
+                  className="min-h-screen md:min-h-[70vh] border border-black bg-blue-light w-full mb-4 flex items-center justify-center text-2xl"
                 >
                   {section}
                 </div>
