@@ -7,14 +7,27 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    colors: {
+      white: '#fff',
+      black: '#000',
+      blue: {
+        light: 'rgb(39 190 255)',
+        dark: 'rgb(22 22 34)'
+      }
+    },
     extend: {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      fontFamily: {
+        roboto: 'var(--font-roboto)'
+      }
     },
   },
-  plugins: [],
+  plugins: [
+    require('@codaworks/react-glow/tailwind')
+  ]
 };
 export default config;

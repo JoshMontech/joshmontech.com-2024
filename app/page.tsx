@@ -1,113 +1,166 @@
-import Image from "next/image";
+"use client"
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+
+const SECTIONS_COUNT = 5;
+const SCROLL_DURATION = 500;
+const WHEEL_DEBOUNCE = 50;
 
 export default function Home() {
+  const sectionRefs = useRef<HTMLDivElement[]>([]);
+  const [activeSection, setActiveSection] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isScrollingRef = useRef(false);
+  const wheelTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Optimized smoothScroll function using useCallback
+  const smoothScroll = useCallback((targetPosition: number, duration: number) => {
+    const start = scrollContainerRef.current?.scrollTop || 0;
+    const distance = targetPosition - start;
+    const startTime = performance.now();
+
+    const animateScroll = (currentTime: number) => {
+      const elapsedTime = currentTime - startTime;
+      if (elapsedTime > duration) {
+        isScrollingRef.current = false;
+        return;
+      }
+
+      const progress = elapsedTime / duration;
+      const easeInOutCubic = progress < 0.5 
+        ? 4 * progress ** 3 
+        : 1 - (-2 * progress + 2) ** 3 / 2;
+
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTop = start + distance * easeInOutCubic;
+      }
+
+      requestAnimationFrame(animateScroll);
+    };
+
+    isScrollingRef.current = true;
+    requestAnimationFrame(animateScroll);
+  }, []);
+
+  // Optimized scrollToSection function using useCallback
+  const scrollToSection = useCallback((index: number) => {
+    const targetSection = sectionRefs.current[index];
+    if (targetSection && scrollContainerRef.current) {
+      const containerHeight = scrollContainerRef.current.clientHeight;
+      const sectionHeight = targetSection.clientHeight;
+      const targetPosition = targetSection.offsetTop - (containerHeight / 2) + (sectionHeight / 2);
+      smoothScroll(targetPosition, SCROLL_DURATION);
+    }
+    setActiveSection(index);
+  }, [smoothScroll]);
+
+  // Optimized handleScroll function using useCallback
+  const handleScroll = useCallback(() => {
+    if (scrollContainerRef.current && !isScrollingRef.current) {
+      const { scrollTop, clientHeight } = scrollContainerRef.current;
+      const containerCenter = scrollTop + (clientHeight / 2);
+
+      const newActiveSection = sectionRefs.current.reduce((closest, section, index) => {
+        if (section) {
+          const sectionCenter = section.offsetTop + (section.clientHeight / 2);
+          const distance = Math.abs(containerCenter - sectionCenter);
+          return distance < closest.distance ? { index, distance } : closest;
+        }
+        return closest;
+      }, { index: 0, distance: Infinity }).index;
+
+      if (newActiveSection !== activeSection) {
+        setActiveSection(newActiveSection);
+      }
+    }
+  }, []);
+
+  // Optimized handleWheel function using useCallback
+  const handleWheel = useCallback((event: WheelEvent) => {
+    event.preventDefault();
+    
+    if (wheelTimeoutRef.current) {
+      clearTimeout(wheelTimeoutRef.current);
+    }
+
+    wheelTimeoutRef.current = setTimeout(() => {
+      const direction = event.deltaY > 0 ? 1 : -1;
+      const newIndex = Math.max(0, Math.min(SECTIONS_COUNT - 1, activeSection + direction));
+      scrollToSection(newIndex);
+    }, WHEEL_DEBOUNCE);
+  }, [activeSection, scrollToSection]);
+
+  useEffect(() => {
+       scrollToSection(0);
+  }, [])
+
+  // Combined useEffects
+  useEffect(() => {
+    const handleGlobalWheel = (event: WheelEvent) => {
+      if (scrollContainerRef.current) {
+        event.preventDefault();
+        handleWheel(event);
+      }
+    };
+
+    window.addEventListener('wheel', handleGlobalWheel, { passive: false });
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('wheel', handleGlobalWheel);
+      window.removeEventListener('keydown', handleKeyDown);
+      if (wheelTimeoutRef.current) {
+        clearTimeout(wheelTimeoutRef.current);
+      }
+    };
+  }, [handleWheel, scrollToSection]);
+
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      const direction = event.key === 'ArrowDown' ? 1 : -1;
+      const newIndex = Math.max(0, Math.min(SECTIONS_COUNT - 1, activeSection + direction));
+      scrollToSection(newIndex);
+    }
+  }, [activeSection, scrollToSection]);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="flex">
+      <div className="left-section fixed w-[calc(50%-8px)] p-4">
+        <div>Joshua Montgomery</div>
+        <div>Front End Engineer</div>
+        {Array.from({ length: SECTIONS_COUNT }).map((_, index) => (
+          <div
+            key={index}
+            className={`cursor-pointer ${activeSection === index ? 'font-bold' : ''}`}
+            onClick={() => scrollToSection(index)}
           >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+            Section {index + 1}
+          </div>
+        ))}
+      </div>
+      <div className="right-section relative ml-[50%] w-[calc(50%-8px)] p-4 overflow-hidden">
+        <div className="mask-container">
+          <div 
+            ref={scrollContainerRef}
+            className="scroll-container overflow-y-auto h-screen"
+            onScroll={handleScroll}
+          >
+            <div className="h-[50vh]"></div>
+            <div>Joshua Montgomery</div>
+            <div>Front End Engineer</div>
+            {Array.from({ length: SECTIONS_COUNT }).map((_, index) => (
+              <div
+                key={index}
+                ref={(el) => el && (sectionRefs.current[index] = el)}
+                className="h-[400px] border border-black bg-blue-light w-full mb-4"
+              >
+                Section {index + 1}
+              </div>
+            ))}
+            <div className="h-[50vh]"></div>
+          </div>
         </div>
       </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   );
 }

@@ -3,31 +3,50 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: #fff;
+  --background-start-rgb: rgb(22 22 34);
+  --background-end-rgb: #020411;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
+} */
+
+html {
+  box-sizing: border-box;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
+  /* color: var(--foreground-rgb);
   background: linear-gradient(
       to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
+      var(--background-start-rgb),
+      var(--background-end-rgb)
     )
-    rgb(var(--background-start-rgb));
+  no-repeat; */
+  background: linear-gradient(90deg,#020411 17px,transparent 1%) 50%,linear-gradient(#020411 17px,transparent 1%) 50%,#3d3d3d;
+  background-size: 18px 18px;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+.mask-container {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+}
+
+.scroll-container {
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none;  /* WebKit */
 }
