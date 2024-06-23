@@ -55,6 +55,7 @@ export default function Home() {
   }, []);
 
   const scrollToSection = useCallback((categoryIndex: number, sectionIndex: number) => {
+    if (isScrollingRef.current) return;
     const targetSection = sectionRefs.current[categoryIndex][sectionIndex];
     if (targetSection && scrollContainerRef.current) {
       const containerHeight = scrollContainerRef.current.clientHeight;
@@ -95,6 +96,7 @@ export default function Home() {
   }, [activeCategory, activeSection]);
 
   const handleWheel = useCallback((event: WheelEvent) => {
+    if (isScrollingRef.current) return;
     event.preventDefault();
     
     if (wheelTimeoutRef.current) {
@@ -152,6 +154,7 @@ export default function Home() {
   }, [handleWheel, scrollToSection]);
 
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    if (isScrollingRef.current) return;
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
       const direction = event.key === 'ArrowDown' ? 1 : -1;
@@ -178,6 +181,7 @@ export default function Home() {
       scrollToSection(categoryIndex, sectionIndex);
     }
   }, [activeSection, scrollToSection]);
+
   return (
     <div className="flex flex-col md:flex-row">
       {/* Left section for desktop, header for mobile */}
