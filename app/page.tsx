@@ -90,10 +90,9 @@ export default function Home() {
   }, [activeSection, scrollToSection]);
 
   useEffect(() => {
-       scrollToSection(0);
+    scrollToSection(0);
   }, [])
 
-  // Combined useEffects
   useEffect(() => {
     const handleGlobalWheel = (event: WheelEvent) => {
       if (scrollContainerRef.current) {
@@ -124,21 +123,30 @@ export default function Home() {
   }, [activeSection, scrollToSection]);
 
   return (
-    <div className="flex">
-      <div className="left-section fixed w-[calc(50%-8px)] p-4">
-        <div>Joshua Montgomery</div>
-        <div>Front End Engineer</div>
-        {Array.from({ length: SECTIONS_COUNT }).map((_, index) => (
-          <div
-            key={index}
-            className={`cursor-pointer ${activeSection === index ? 'font-bold' : ''}`}
-            onClick={() => scrollToSection(index)}
-          >
-            Section {index + 1}
+    <div className="flex flex-col md:flex-row">
+      {/* Left section for desktop, header for mobile */}
+      <div className="sticky top-0 z-10 w-full md:w-[calc(50%-8px)] md:fixed md:h-screen  px-4 shadow-md md:shadow-none">
+        <div className="flex justify-between items-center md:flex-col md:items-start md:h-full">
+          <div>
+            <div className="text-lg font-bold">Joshua Montgomery</div>
+            <div className="text-sm text-gray-600 md:mb-4">Front End Engineer</div>
           </div>
-        ))}
+          <div className="flex md:flex-col space-x-2 md:space-x-0 md:space-y-2">
+            {Array.from({ length: SECTIONS_COUNT }).map((_, index) => (
+              <div
+                key={index}
+                className={`cursor-pointer px-2 py-1 rounded ${activeSection === index ? 'font-bold bg-gray-200' : ''}`}
+                onClick={() => scrollToSection(index)}
+              >
+                Section {index + 1}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-      <div className="right-section relative ml-[50%] w-[calc(50%-8px)] p-4 overflow-hidden">
+
+      {/* Main content section */}
+      <div className="md:ml-[50%] p-x4 overflow-hidden flex-1">
         <div className="mask-container">
           <div 
             ref={scrollContainerRef}
@@ -146,13 +154,11 @@ export default function Home() {
             onScroll={handleScroll}
           >
             <div className="h-[50vh]"></div>
-            <div>Joshua Montgomery</div>
-            <div>Front End Engineer</div>
             {Array.from({ length: SECTIONS_COUNT }).map((_, index) => (
               <div
                 key={index}
                 ref={(el) => el && (sectionRefs.current[index] = el)}
-                className="h-[400px] border border-black bg-blue-light w-full mb-4"
+                className="min-h-screen md:min-h-[400px] border border-black bg-blue-light w-full mb-4 flex items-center justify-center text-2xl"
               >
                 Section {index + 1}
               </div>
