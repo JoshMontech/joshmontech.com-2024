@@ -34,51 +34,53 @@ const CATEGORIES = [
     ]
   }
 ];
+
 export default function Home() {
   const [activeSection, setActiveSection] = useState({ categoryIndex: 0, sectionIndex: 0 });
   const sectionRefs = useRef({});
   const scrollContainerRef = useRef(null);
   const intersectionRatios = useRef({});
+
   useEffect(() => {
     console.log('Setting up Intersection Observer');
-  const observer = new IntersectionObserver(
-    (entries) => {
-      console.log('Intersection Observer callback triggered');
-      entries.forEach((entry) => {
-        const [categoryIndex, sectionIndex] = entry.target.id.split('-').map(Number);
-        intersectionRatios.current[`${categoryIndex}-${sectionIndex}`] = entry.intersectionRatio;
-        console.log(`Section ${categoryIndex}-${sectionIndex} intersection ratio: ${entry.intersectionRatio}`);
-      });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        console.log('Intersection Observer callback triggered');
+        entries.forEach((entry) => {
+          const [categoryIndex, sectionIndex] = entry.target.id.split('-').map(Number);
+          intersectionRatios.current[`${categoryIndex}-${sectionIndex}`] = entry.intersectionRatio;
+          console.log(`Section ${categoryIndex}-${sectionIndex} intersection ratio: ${entry.intersectionRatio}`);
+        });
 
-      let maxRatio = 0;
-      let mostVisibleSection = null;
+        let maxRatio = 0;
+        let mostVisibleSection = null;
 
-      Object.entries(intersectionRatios.current).forEach(([key, ratio]) => {
-        if (ratio > maxRatio) {
-          maxRatio = ratio;
-          const [categoryIndex, sectionIndex] = key.split('-').map(Number);
-          mostVisibleSection = { categoryIndex, sectionIndex };
+        Object.entries(intersectionRatios.current).forEach(([key, ratio]) => {
+          if (ratio > maxRatio) {
+            maxRatio = ratio;
+            const [categoryIndex, sectionIndex] = key.split('-').map(Number);
+            mostVisibleSection = { categoryIndex, sectionIndex };
+          }
+        });
+
+        console.log('Current intersection ratios:', intersectionRatios.current);
+        console.log('Most visible section:', mostVisibleSection);
+        console.log('Current active section:', activeSection);
+
+        if (mostVisibleSection && (
+          mostVisibleSection.categoryIndex !== activeSection.categoryIndex ||
+          mostVisibleSection.sectionIndex !== activeSection.sectionIndex
+        )) {
+          console.log('Updating active section to:', mostVisibleSection);
+          setActiveSection(mostVisibleSection);
         }
-      });
-
-      console.log('Current intersection ratios:', intersectionRatios.current);
-      console.log('Most visible section:', mostVisibleSection);
-      console.log('Current active section:', activeSection);
-
-      if (mostVisibleSection && (
-        mostVisibleSection.categoryIndex !== activeSection.categoryIndex ||
-        mostVisibleSection.sectionIndex !== activeSection.sectionIndex
-      )) {
-        console.log('Updating active section to:', mostVisibleSection);
-        setActiveSection(mostVisibleSection);
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
       }
-    },
-    {
-      root: null, // Use the viewport as root
-      rootMargin: '0px',
-      threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
-    }
-  );
+    );
 
     console.log('Sections to observe:', Object.keys(sectionRefs.current));
     Object.entries(sectionRefs.current).forEach(([key, section]) => {
@@ -111,17 +113,15 @@ export default function Home() {
     }
   }, []);
 
-  // New function to scroll to the first section of a category
   const scrollToCategory = (categoryIndex: number) => {
     console.log(`Scrolling to category: ${categoryIndex}`);
-    scrollToSection(categoryIndex, 0);  // 0 represents the first section in the category
+    scrollToSection(categoryIndex, 0);
   };
 
   console.log('Rendering with active section:', activeSection);
 
   return (
     <div className="flex relative mx-auto max-w-[1280px] px-6 justify-end">
-      {/* Left section for desktop, header for mobile */}
       <div className="w-full fixed top-0 left-0 right-0 md:right-auto md:w-[30%] md:sticky md:h-screen flex items-center justify-start">
         <div>
           <div className="flex items-center gap-4 mb-4">
@@ -135,14 +135,23 @@ export default function Home() {
           <div className="space-y-2">
             {CATEGORIES.map((category, categoryIndex) => (
               <div key={categoryIndex}>
-                <div className={`cursor-pointer px-2 py-1 rounded ${activeSection.categoryIndex === categoryIndex ? 'font-bold' : 'font-light'}`} onClick={() => scrollToCategory(categoryIndex)}>
+                <div 
+                  className={`cursor-pointer px-2 py-1 rounded ${
+                    activeSection.categoryIndex === categoryIndex ? 'font-bold active' : 'font-light'
+                  }`} 
+                  onClick={() => scrollToCategory(categoryIndex)}
+                >
                   {category.name}
                 </div>
                 <ul className="pl-8">
                   {category.sections.map((section, sectionIndex) => (
                     <li
                       key={sectionIndex}
-                      className={`cursor-pointer px-2 py-1 rounded ${activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex ? 'font-bold' : 'font-light'}`}
+                      className={`cursor-pointer px-2 py-1 rounded underline-animation w-fit ${
+                        activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex 
+                          ? 'font-bold active' 
+                          : 'font-light'
+                      }`}
                       onClick={() => scrollToSection(categoryIndex, sectionIndex)}
                     >
                       {section.title}
@@ -155,7 +164,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Main content section */}
       <div ref={scrollContainerRef} className="w-full md:w-[70%] overflow-y-auto">
         <div className="">
           <div className="h-[30vh]"></div>
@@ -174,7 +182,6 @@ export default function Home() {
                   }}
                   className="min-h-screen md:min-h-[70vh] border border-blue-light w-full mb-4 flex flex-col items-center justify-center"
                 >
-                  {/* <h2 className="text-2xl font-bold mb-4">{section.title}</h2> */}
                   <SectionComponent />
                 </div>
               );
