@@ -128,21 +128,21 @@ export default function Home() {
             <ProfilePicture />
             <div className="flex flex-col ">
               <div className="text-lg font-bold">Joshua Montgomery</div>
-              <div className="text-sm text-gray-600">Front End Engineer</div>
+              <div className="text-sm font-light">Front End Engineer</div>
               <SocialBadges />
             </div>
           </div>
           <div className="space-y-2">
             {CATEGORIES.map((category, categoryIndex) => (
               <div key={categoryIndex}>
-                <div className={`cursor-pointer px-2 py-1 rounded ${activeSection.categoryIndex === categoryIndex ? 'font-bold' : ''}`} onClick={() => scrollToCategory(categoryIndex)}>
+                <div className={`cursor-pointer px-2 py-1 rounded ${activeSection.categoryIndex === categoryIndex ? 'font-bold' : 'font-light'}`} onClick={() => scrollToCategory(categoryIndex)}>
                   {category.name}
                 </div>
                 <div className="pl-4">
                   {category.sections.map((section, sectionIndex) => (
                     <div
                       key={sectionIndex}
-                      className={`cursor-pointer px-2 py-1 rounded ${activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex ? 'font-bold' : ''}`}
+                      className={`cursor-pointer px-2 py-1 rounded ${activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex ? 'font-bold' : 'font-light'}`}
                       onClick={() => scrollToSection(categoryIndex, sectionIndex)}
                     >
                       {section.title}
