@@ -1,22 +1,38 @@
 "use client"
 import React, { useRef, useEffect, useState } from 'react';
 import ProfilePicture from './components/ProfilePicture';
+import About from './components/About';
+import FeaturedProjects from './components/FeaturedProjects';
+import Skills from './components/Skills';
+import Jobs from './components/Jobs';
+import OtherWork from './components/OtherWork';
+import GetInTouch from './components/GetInTouch';
+import Resume from './components/Resume';
 
 const CATEGORIES = [
   {
     name: 'Experience',
-    sections: ['About', 'Skills', 'Jobs']
+    sections: [
+      { title: 'About Me', component: About },
+      { title: 'Skills & Technologies', component: Skills },
+      { title: 'Work Experience', component: Jobs }
+    ]
   },
   {
     name: 'Projects',
-    sections: ['Featured Projects', 'Other Work', 'Open Source Contributions']
+    sections: [
+      { title: 'Featured Projects', component: FeaturedProjects },
+      { title: 'Other Work', component: OtherWork },
+    ]
   },
   {
     name: 'Contact',
-    sections: ['Get in Touch', 'Resume', 'Social Media']
+    sections: [
+      { title: 'Get in Touch', component: GetInTouch },
+      { title: 'Resume', component: Resume },
+    ]
   }
 ];
-
 export default function Home() {
   const [activeSection, setActiveSection] = useState({ categoryIndex: 0, sectionIndex: 0 });
   const sectionRefs = useRef({});
@@ -96,10 +112,10 @@ export default function Home() {
   return (
     <div className="flex relative mx-auto max-w-[1280px] px-6 justify-end">
       {/* Left section for desktop, header for mobile */}
-      <div className="w-full fixed top-0 left-0 right-0 md:right-auto md:w-[30%] md:sticky md: h-screen flex items-center justify-start">
+      <div className="w-full fixed top-0 left-0 right-0 md:right-auto md:w-[30%] md:sticky md:h-screen flex items-center justify-start">
         <div>
           <div className="flex items-center gap-4 mb-4">
-          <ProfilePicture />
+            <ProfilePicture />
             <div className="flex flex-col gap-2 ">
               <div className="text-lg font-bold">Joshua Montgomery</div>
               <div className="text-sm text-gray-600">Front End Engineer</div>
@@ -118,7 +134,7 @@ export default function Home() {
                       className={`cursor-pointer px-2 py-1 rounded ${activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex ? 'font-bold bg-gray-200' : ''}`}
                       onClick={() => scrollToSection(categoryIndex, sectionIndex)}
                     >
-                      {section}
+                      {section.title}
                     </div>
                   ))}
                 </div>
@@ -132,21 +148,25 @@ export default function Home() {
       <div ref={scrollContainerRef} className="w-full md:w-[70%] overflow-y-auto">
         <div className="">
           {CATEGORIES.map((category, categoryIndex) => (
-            category.sections.map((section, sectionIndex) => (
-              <div
-                key={`${categoryIndex}-${sectionIndex}`}
-                id={`${categoryIndex}-${sectionIndex}`}
-                ref={(el) => {
-                  if (el) {
-                    sectionRefs.current[`${categoryIndex}-${sectionIndex}`] = el;
-                    console.log(`Ref set for section: ${categoryIndex}-${sectionIndex}`);
-                  }
-                }}
-                className="min-h-screen md:min-h-[70vh] border border-blue-light w-full mb-4 flex items-center justify-center text-2xl"
-              >
-                {section}
-              </div>
-            ))
+            category.sections.map((section, sectionIndex) => {
+              const SectionComponent = section.component;
+              return (
+                <div
+                  key={`${categoryIndex}-${sectionIndex}`}
+                  id={`${categoryIndex}-${sectionIndex}`}
+                  ref={(el) => {
+                    if (el) {
+                      sectionRefs.current[`${categoryIndex}-${sectionIndex}`] = el;
+                      console.log(`Ref set for section: ${categoryIndex}-${sectionIndex}`);
+                    }
+                  }}
+                  className="min-h-screen md:min-h-[70vh] border border-blue-light w-full mb-4 flex flex-col items-center justify-center"
+                >
+                  {/* <h2 className="text-2xl font-bold mb-4">{section.title}</h2> */}
+                  <SectionComponent />
+                </div>
+              );
+            })
           ))}
           <div className="h-[50vh]"></div>
         </div>
