@@ -107,6 +107,12 @@ export default function Home() {
     }
   };
 
+  // New function to scroll to the first section of a category
+  const scrollToCategory = (categoryIndex: number) => {
+    console.log(`Scrolling to category: ${categoryIndex}`);
+    scrollToSection(categoryIndex, 0);  // 0 represents the first section in the category
+  };
+
   console.log('Rendering with active section:', activeSection);
 
   return (
@@ -124,7 +130,7 @@ export default function Home() {
           <div className="space-y-2">
             {CATEGORIES.map((category, categoryIndex) => (
               <div key={categoryIndex}>
-                <div className={`cursor-pointer px-2 py-1 rounded ${activeSection.categoryIndex === categoryIndex ? 'font-bold bg-gray-200' : ''}`}>
+                <div className={`cursor-pointer px-2 py-1 rounded ${activeSection.categoryIndex === categoryIndex ? 'font-bold bg-gray-200' : ''}`} onClick={() => scrollToCategory(categoryIndex)}>
                   {category.name}
                 </div>
                 <div className="pl-4">
