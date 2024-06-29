@@ -138,17 +138,17 @@ export default function Home() {
                 <div className={`cursor-pointer px-2 py-1 rounded ${activeSection.categoryIndex === categoryIndex ? 'font-bold' : 'font-light'}`} onClick={() => scrollToCategory(categoryIndex)}>
                   {category.name}
                 </div>
-                <div className="pl-4">
+                <ul className="pl-8">
                   {category.sections.map((section, sectionIndex) => (
-                    <div
+                    <li
                       key={sectionIndex}
                       className={`cursor-pointer px-2 py-1 rounded ${activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex ? 'font-bold' : 'font-light'}`}
                       onClick={() => scrollToSection(categoryIndex, sectionIndex)}
                     >
                       {section.title}
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             ))}
           </div>
