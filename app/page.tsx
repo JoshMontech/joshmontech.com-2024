@@ -1,208 +1,114 @@
 "use client"
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import ProfilePicture from './components/ProfilePicture';
 
 const CATEGORIES = [
   {
-    name: 'Category 1',
-    sections: ['Section 1.1', 'Section 1.2']
+    name: 'Experience',
+    sections: ['About', 'Skills', 'Jobs']
   },
   {
-    name: 'Category 2',
-    sections: ['Section 2.1', 'Section 2.2', 'Section 2.3']
+    name: 'Projects',
+    sections: ['Featured Projects', 'Other Work', 'Open Source Contributions']
   },
   {
-    name: 'Category 3',
-    sections: ['Section 3.1', 'Section 3.2']
+    name: 'Contact',
+    sections: ['Get in Touch', 'Resume', 'Social Media']
   }
 ];
-const SCROLL_DURATION = 500;
-const WHEEL_DEBOUNCE = 50;
 
 export default function Home() {
-  const sectionRefs = useRef<HTMLDivElement[][]>([]);
   const [activeSection, setActiveSection] = useState({ categoryIndex: 0, sectionIndex: 0 });
-  const [activeCategory, setActiveCategory] = useState(0);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const isScrollingRef = useRef(false);
-  const wheelTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const sectionRefs = useRef({});
+  const scrollContainerRef = useRef(null);
+  const intersectionRatios = useRef({});
 
-  const smoothScroll = useCallback((targetPosition: number, duration: number) => {
-    const start = scrollContainerRef.current?.scrollTop || 0;
-    const distance = targetPosition - start;
-    const startTime = performance.now();
-
-    const animateScroll = (currentTime: number) => {
-      const elapsedTime = currentTime - startTime;
-      if (elapsedTime > duration) {
-        isScrollingRef.current = false;
-        return;
-      }
-
-      const progress = elapsedTime / duration;
-      const easeInOutCubic = progress < 0.5 
-        ? 4 * progress ** 3 
-        : 1 - (-2 * progress + 2) ** 3 / 2;
-
-      if (scrollContainerRef.current) {
-        scrollContainerRef.current.scrollTop = start + distance * easeInOutCubic;
-      }
-
-      requestAnimationFrame(animateScroll);
-    };
-
-    isScrollingRef.current = true;
-    requestAnimationFrame(animateScroll);
-  }, []);
-
-  const scrollToSection = useCallback((categoryIndex: number, sectionIndex: number) => {
-    if (isScrollingRef.current) return;
-    const targetSection = sectionRefs.current[categoryIndex][sectionIndex];
-    if (targetSection && scrollContainerRef.current) {
-      const containerHeight = scrollContainerRef.current.clientHeight;
-      const sectionHeight = targetSection.clientHeight;
-      const targetPosition = targetSection.offsetTop - (containerHeight / 2) + (sectionHeight / 2);
-      smoothScroll(targetPosition, SCROLL_DURATION);
-    }
-    setActiveSection({ categoryIndex, sectionIndex });
-    setActiveCategory(categoryIndex);
-  }, [smoothScroll]);
-
-  const handleScroll = useCallback(() => {
-    if (scrollContainerRef.current && !isScrollingRef.current) {
-      const { scrollTop, clientHeight } = scrollContainerRef.current;
-      const containerCenter = scrollTop + (clientHeight / 2);
-
-      let newActiveCategory = activeCategory;
-      let newActiveSection = activeSection;
-
-      sectionRefs.current.forEach((category, categoryIndex) => {
-        category.forEach((section, sectionIndex) => {
-          if (section) {
-            const sectionCenter = section.offsetTop + (section.clientHeight / 2);
-            const distance = Math.abs(containerCenter - sectionCenter);
-            if (distance < Infinity) {
-              newActiveCategory = categoryIndex;
-              newActiveSection = { categoryIndex, sectionIndex };
-            }
-          }
-        });
+  useEffect(() => {
+    console.log('Setting up Intersection Observer');
+  const observer = new IntersectionObserver(
+    (entries) => {
+      console.log('Intersection Observer callback triggered');
+      entries.forEach((entry) => {
+        const [categoryIndex, sectionIndex] = entry.target.id.split('-').map(Number);
+        intersectionRatios.current[`${categoryIndex}-${sectionIndex}`] = entry.intersectionRatio;
+        console.log(`Section ${categoryIndex}-${sectionIndex} intersection ratio: ${entry.intersectionRatio}`);
       });
 
-      if (newActiveSection.categoryIndex !== activeSection.categoryIndex || newActiveSection.sectionIndex !== activeSection.sectionIndex) {
-        setActiveSection(newActiveSection);
-        setActiveCategory(newActiveCategory);
-      }
-    }
-  }, [activeCategory, activeSection]);
+      let maxRatio = 0;
+      let mostVisibleSection = null;
 
-  const handleWheel = useCallback((event: WheelEvent) => {
-    if (isScrollingRef.current) return;
-    event.preventDefault();
-    
-    if (wheelTimeoutRef.current) {
-      clearTimeout(wheelTimeoutRef.current);
-    }
-
-    wheelTimeoutRef.current = setTimeout(() => {
-      const direction = event.deltaY > 0 ? 1 : -1;
-      let { categoryIndex, sectionIndex } = activeSection;
-      if (direction > 0) {
-        sectionIndex += 1;
-        if (sectionIndex >= sectionRefs.current[categoryIndex].length) {
-          sectionIndex = 0;
-          categoryIndex = Math.min(categoryIndex + 1, CATEGORIES.length - 1);
-          if (categoryIndex === activeSection.categoryIndex) {
-            return; // Prevents bouncing back
-          }
+      Object.entries(intersectionRatios.current).forEach(([key, ratio]) => {
+        if (ratio > maxRatio) {
+          maxRatio = ratio;
+          const [categoryIndex, sectionIndex] = key.split('-').map(Number);
+          mostVisibleSection = { categoryIndex, sectionIndex };
         }
-      } else {
-        sectionIndex -= 1;
-        if (sectionIndex < 0) {
-          categoryIndex = Math.max(categoryIndex - 1, 0);
-          if (categoryIndex === activeSection.categoryIndex) {
-            return; // Prevents bouncing back
-          }
-          sectionIndex = sectionRefs.current[categoryIndex].length - 1;
-        }
+      });
+
+      console.log('Current intersection ratios:', intersectionRatios.current);
+      console.log('Most visible section:', mostVisibleSection);
+      console.log('Current active section:', activeSection);
+
+      if (mostVisibleSection && (
+        mostVisibleSection.categoryIndex !== activeSection.categoryIndex ||
+        mostVisibleSection.sectionIndex !== activeSection.sectionIndex
+      )) {
+        console.log('Updating active section to:', mostVisibleSection);
+        setActiveSection(mostVisibleSection);
       }
-      scrollToSection(categoryIndex, sectionIndex);
-    }, WHEEL_DEBOUNCE);
-  }, [activeSection, scrollToSection]);
+    },
+    {
+      root: null, // Use the viewport as root
+      rootMargin: '0px',
+      threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+    }
+  );
 
-  useEffect(() => {
-    scrollToSection(0, 0);
-  }, []);
-
-  useEffect(() => {
-    const handleGlobalWheel = (event: WheelEvent) => {
-      if (scrollContainerRef.current) {
-        event.preventDefault();
-        handleWheel(event);
+    console.log('Sections to observe:', Object.keys(sectionRefs.current));
+    Object.entries(sectionRefs.current).forEach(([key, section]) => {
+      if (section) {
+        observer.observe(section);
+        console.log(`Observing section: ${key}`);
       }
-    };
-
-    const handleMiddleClick = (event: MouseEvent) => {
-      if (event.button === 1) {
-        event.preventDefault();
-      }
-    };
-
-    window.addEventListener('wheel', handleGlobalWheel, { passive: false });
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('mousedown', handleMiddleClick);
+    });
 
     return () => {
-      window.removeEventListener('wheel', handleGlobalWheel);
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('mousedown', handleMiddleClick);
-      if (wheelTimeoutRef.current) {
-        clearTimeout(wheelTimeoutRef.current);
-      }
+      console.log('Cleaning up Intersection Observer');
+      Object.values(sectionRefs.current).forEach((section) => {
+        if (section) {
+          observer.unobserve(section);
+        }
+      });
     };
-  }, [handleWheel, scrollToSection]);
+  }, [activeSection]);
 
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    if (isScrollingRef.current) return;
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-      event.preventDefault();
-      const direction = event.key === 'ArrowDown' ? 1 : -1;
-      let { categoryIndex, sectionIndex } = activeSection;
-      if (direction > 0) {
-        sectionIndex += 1;
-        if (sectionIndex >= sectionRefs.current[categoryIndex].length) {
-          sectionIndex = 0;
-          categoryIndex = Math.min(categoryIndex + 1, CATEGORIES.length - 1);
-          if (categoryIndex === activeSection.categoryIndex) {
-            return; // Prevents bouncing back
-          }
-        }
-      } else {
-        sectionIndex -= 1;
-        if (sectionIndex < 0) {
-          categoryIndex = Math.max(categoryIndex - 1, 0);
-          if (categoryIndex === activeSection.categoryIndex) {
-            return; // Prevents bouncing back
-          }
-          sectionIndex = sectionRefs.current[categoryIndex].length - 1;
-        }
-      }
-      scrollToSection(categoryIndex, sectionIndex);
+  const scrollToSection = (categoryIndex: number, sectionIndex: number) => {
+    console.log(`Scrolling to section: ${categoryIndex}-${sectionIndex}`);
+    const sectionId = `${categoryIndex}-${sectionIndex}`;
+    const sectionElement = sectionRefs.current[sectionId];
+    if (sectionElement && scrollContainerRef.current) {
+      sectionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-  }, [activeSection, scrollToSection]);
+  };
+
+  console.log('Rendering with active section:', activeSection);
 
   return (
-    <div className="flex flex-col md:flex-row">
+    <div className="flex relative mx-auto max-w-[1280px] px-6 justify-end">
       {/* Left section for desktop, header for mobile */}
-      <div className="sticky top-0 z-10 w-full md:w-[calc(30%-8px)] md:fixed md:h-screen px-4 shadow-md md:shadow-none">
-        <div className="flex justify-between items-center md:flex-col md:items-start md:h-full">
-          <div>
-            <div className="text-lg font-bold">Joshua Montgomery</div>
-            <div className="text-sm text-gray-600 md:mb-4">Front End Engineer</div>
+      <div className="w-full fixed top-0 left-0 right-0 md:right-auto md:w-[30%] md:sticky md: h-screen flex items-center justify-start">
+        <div>
+          <div className="flex items-center gap-4 mb-4">
+          <ProfilePicture />
+            <div className="flex flex-col gap-2 ">
+              <div className="text-lg font-bold">Joshua Montgomery</div>
+              <div className="text-sm text-gray-600">Front End Engineer</div>
+            </div>
           </div>
-          <div className="flex md:flex-col space-x-2 md:space-x-0 md:space-y-2">
+          <div className="space-y-2">
             {CATEGORIES.map((category, categoryIndex) => (
               <div key={categoryIndex}>
-                <div className={`cursor-pointer px-2 py-1 rounded ${activeCategory === categoryIndex ? 'font-bold bg-gray-200' : ''}`}>
+                <div className={`cursor-pointer px-2 py-1 rounded ${activeSection.categoryIndex === categoryIndex ? 'font-bold bg-gray-200' : ''}`}>
                   {category.name}
                 </div>
                 <div className="pl-4">
@@ -223,34 +129,26 @@ export default function Home() {
       </div>
 
       {/* Main content section */}
-      <div className="md:ml-[30%] px-4 overflow-hidden flex-1">
-        <div className="mask-container">
-          <div 
-            ref={scrollContainerRef}
-            className="scroll-container overflow-y-auto h-screen"
-            onScroll={handleScroll}
-          >
-            <div className="h-[50vh]"></div>
-            {CATEGORIES.map((category, categoryIndex) => (
-              category.sections.map((section, sectionIndex) => (
-                <div
-                  key={`${categoryIndex}-${sectionIndex}`}
-                  ref={(el) => {
-                    if (el) {
-                      if (!sectionRefs.current[categoryIndex]) {
-                        sectionRefs.current[categoryIndex] = [];
-                      }
-                      sectionRefs.current[categoryIndex][sectionIndex] = el;
-                    }
-                  }}
-                  className="min-h-screen md:min-h-[70vh] border border-black bg-blue-light w-full mb-4 flex items-center justify-center text-2xl"
-                >
-                  {section}
-                </div>
-              ))
-            ))}
-            <div className="h-[50vh]"></div>
-          </div>
+      <div ref={scrollContainerRef} className="w-full md:w-[70%] overflow-y-auto">
+        <div className="">
+          {CATEGORIES.map((category, categoryIndex) => (
+            category.sections.map((section, sectionIndex) => (
+              <div
+                key={`${categoryIndex}-${sectionIndex}`}
+                id={`${categoryIndex}-${sectionIndex}`}
+                ref={(el) => {
+                  if (el) {
+                    sectionRefs.current[`${categoryIndex}-${sectionIndex}`] = el;
+                    console.log(`Ref set for section: ${categoryIndex}-${sectionIndex}`);
+                  }
+                }}
+                className="min-h-screen md:min-h-[70vh] border border-blue-light w-full mb-4 flex items-center justify-center text-2xl"
+              >
+                {section}
+              </div>
+            ))
+          ))}
+          <div className="h-[50vh]"></div>
         </div>
       </div>
     </div>

@@ -50,3 +50,9 @@ body {
 .scroll-container::-webkit-scrollbar {
   display: none;  /* WebKit */
 }
+
+.profile-picture {
+  box-shadow:
+    0 0 0 10px rgba(52, 152, 219, 0.1),
+    0 0 0 15px rgba(52, 152, 219, 0.05);
+}
