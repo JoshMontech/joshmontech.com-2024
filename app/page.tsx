@@ -1,5 +1,5 @@
 "use client"
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import ProfilePicture from './components/ProfilePicture';
 import About from './components/About';
 import FeaturedProjects from './components/FeaturedProjects';
@@ -8,6 +8,7 @@ import Jobs from './components/Jobs';
 import OtherWork from './components/OtherWork';
 import GetInTouch from './components/GetInTouch';
 import Resume from './components/Resume';
+import SocialBadges from './components/SocialBadges';
 
 const CATEGORIES = [
   {
@@ -38,7 +39,6 @@ export default function Home() {
   const sectionRefs = useRef({});
   const scrollContainerRef = useRef(null);
   const intersectionRatios = useRef({});
-
   useEffect(() => {
     console.log('Setting up Intersection Observer');
   const observer = new IntersectionObserver(
@@ -98,14 +98,18 @@ export default function Home() {
     };
   }, [activeSection]);
 
-  const scrollToSection = (categoryIndex: number, sectionIndex: number) => {
+  useEffect(() => {
+    scrollToSection(0,0)
+  }, [])
+
+  const scrollToSection = useCallback((categoryIndex: number, sectionIndex: number) => {
     console.log(`Scrolling to section: ${categoryIndex}-${sectionIndex}`);
     const sectionId = `${categoryIndex}-${sectionIndex}`;
     const sectionElement = sectionRefs.current[sectionId];
     if (sectionElement && scrollContainerRef.current) {
       sectionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-  };
+  }, []);
 
   // New function to scroll to the first section of a category
   const scrollToCategory = (categoryIndex: number) => {
@@ -122,22 +126,23 @@ export default function Home() {
         <div>
           <div className="flex items-center gap-4 mb-4">
             <ProfilePicture />
-            <div className="flex flex-col gap-2 ">
+            <div className="flex flex-col ">
               <div className="text-lg font-bold">Joshua Montgomery</div>
               <div className="text-sm text-gray-600">Front End Engineer</div>
+              <SocialBadges />
             </div>
           </div>
           <div className="space-y-2">
             {CATEGORIES.map((category, categoryIndex) => (
               <div key={categoryIndex}>
-                <div className={`cursor-pointer px-2 py-1 rounded ${activeSection.categoryIndex === categoryIndex ? 'font-bold bg-gray-200' : ''}`} onClick={() => scrollToCategory(categoryIndex)}>
+                <div className={`cursor-pointer px-2 py-1 rounded ${activeSection.categoryIndex === categoryIndex ? 'font-bold' : ''}`} onClick={() => scrollToCategory(categoryIndex)}>
                   {category.name}
                 </div>
                 <div className="pl-4">
                   {category.sections.map((section, sectionIndex) => (
                     <div
                       key={sectionIndex}
-                      className={`cursor-pointer px-2 py-1 rounded ${activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex ? 'font-bold bg-gray-200' : ''}`}
+                      className={`cursor-pointer px-2 py-1 rounded ${activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex ? 'font-bold' : ''}`}
                       onClick={() => scrollToSection(categoryIndex, sectionIndex)}
                     >
                       {section.title}
@@ -153,6 +158,7 @@ export default function Home() {
       {/* Main content section */}
       <div ref={scrollContainerRef} className="w-full md:w-[70%] overflow-y-auto">
         <div className="">
+          <div className="h-[30vh]"></div>
           {CATEGORIES.map((category, categoryIndex) => (
             category.sections.map((section, sectionIndex) => {
               const SectionComponent = section.component;
