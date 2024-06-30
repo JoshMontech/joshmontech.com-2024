@@ -37,6 +37,7 @@ const CATEGORIES = [
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState({ categoryIndex: 0, sectionIndex: 0 });
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const sectionRefs = useRef({});
   const scrollContainerRef = useRef(null);
   const intersectionRatios = useRef({});
@@ -122,49 +123,93 @@ export default function Home() {
 
   return (
     <div className="flex relative mx-auto max-w-[1280px] px-6 justify-end">
-      <div className="w-full fixed top-0 left-0 right-0 md:right-auto md:w-[30%] md:sticky md:h-screen flex items-center justify-start">
-        <div>
-          <div className="flex items-center gap-4 mb-4">
-            <ProfilePicture />
-            <div className="flex flex-col ">
-              <div className="text-lg font-bold">Joshua Montgomery</div>
-              <div className="text-sm font-light">Front End Engineer</div>
-              <SocialBadges />
-            </div>
+      <div className="bg-[#020411] border-b border-blue-light md:bg-inherit w-full fixed top-0 left-0 right-0 z-50 p-4 md:p-0 md:w-[30%] md:sticky md:h-screen flex flex-col md:items-center md:justify-center">
+        <div className="flex items-center gap-4 mb-4 w-full">
+          <ProfilePicture />
+          <div className="flex flex-col">
+            <div className="text-lg font-bold">Joshua Montgomery</div>
+            <div className="text-sm font-light">Full Stack Engineer</div>
+            <SocialBadges />
           </div>
-          <div className="space-y-2">
-            {CATEGORIES.map((category, categoryIndex) => (
-              <div key={categoryIndex}>
-                <div 
-                  className={`cursor-pointer px-2 py-1 rounded ${
-                    activeSection.categoryIndex === categoryIndex ? 'font-bold active' : 'font-light'
-                  }`} 
-                  onClick={() => scrollToCategory(categoryIndex)}
-                >
-                  {category.name}
-                </div>
-                <ul className="pl-8">
+        </div>
+        
+        {/* Mobile dropdown */}
+        <div className="md:hidden bg-[#020411]">
+          <div 
+            className="cursor-pointer p-2 border rounded border-blue-light"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            {CATEGORIES[activeSection.categoryIndex].name} - {CATEGORIES[activeSection.categoryIndex].sections[activeSection.sectionIndex].title}
+          </div>
+          {isDropdownOpen && (
+            <div className="absolute top-full left-0 right-0 border border-blue-light mt-4 p-2 bg-[#020411] mx-4 rounded">
+              {CATEGORIES.map((category, categoryIndex) => (
+                <div key={categoryIndex} className="mb-2">
+                  <div className="font-bold">{category.name}</div>
                   {category.sections.map((section, sectionIndex) => (
-                    <li
-                      key={sectionIndex}
-                      className={`cursor-pointer px-2 py-1 rounded underline-animation w-fit ${
-                        activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex 
-                          ? 'font-bold active' 
-                          : 'font-light'
-                      }`}
-                      onClick={() => scrollToSection(categoryIndex, sectionIndex)}
+                    <div 
+                      key={sectionIndex} 
+                      className="pl-4 py-1 cursor-pointer"
+                      onClick={() => {
+                        scrollToSection(categoryIndex, sectionIndex);
+                        setIsDropdownOpen(false);
+                      }}
                     >
                       {section.title}
-                    </li>
+                    </div>
                   ))}
-                </ul>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Desktop navigation */}
+        <div className="hidden md:block space-y-2 w-full ">
+          {CATEGORIES.map((category, categoryIndex) => (
+            <div key={categoryIndex} className="relative">
+              <div 
+                className={`cursor-pointer px-2 py-1 rounded ${
+                  activeSection.categoryIndex === categoryIndex ? 'font-bold' : 'font-light'
+                }`} 
+                onClick={() => scrollToCategory(categoryIndex)}
+              >
+                {category.name}
               </div>
-            ))}
-          </div>
+              <ul className="ml-5 pl-3 mt-2 relative">
+                {category.sections.map((section, sectionIndex) => (
+                  <li
+                    key={sectionIndex}
+                    className={`cursor-pointer px-2 py-1 rounded relative w-fit ${
+                      activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex 
+                        ? 'font-bold' 
+                        : 'font-light'
+                    }`}
+                    onClick={() => scrollToSection(categoryIndex, sectionIndex)}
+                  >
+                    {section.title}
+                    <div 
+                      className={`absolute bottom-0 left-0 h-[1px] rounded bg-[rgb(39,190,255)] transition-all duration-300 ease-in-out ${activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex ? 'w-full' : 'w-0'}`}
+                      // style={{
+                      //   width: activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex ? '100%' : '0%'
+                      // }}
+                    />
+                  </li>
+                ))}
+                <div 
+                className={`absolute left-0 w-[1px] bg-[rgb(39,190,255)] rounded transition-all duration-300 ease-in-out top-0 ${activeSection.categoryIndex === categoryIndex ? 'h-full' : 'h-0'}`}
+                // style={{
+                //   height: activeSection.categoryIndex === categoryIndex ? `${category.sections.length * 1.75}rem` : '0',
+                // }}
+              />
+              </ul>
+              
+            </div>
+          ))}
         </div>
       </div>
 
-      <div ref={scrollContainerRef} className="w-full md:w-[70%] overflow-y-auto">
+      <div ref={scrollContainerRef} className="w-full md:w-[70%] overflow-y-auto mt-32 md:mt-0">
         <div className="">
           <div className="h-[30vh]"></div>
           {CATEGORIES.map((category, categoryIndex) => (
