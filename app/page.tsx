@@ -1,5 +1,6 @@
 "use client"
 import React, { useRef, useEffect, useState, useCallback } from 'react';
+import Image from 'next/image';
 import ProfilePicture from './components/ProfilePicture';
 import About from './components/About';
 import FeaturedProjects from './components/FeaturedProjects';
@@ -9,6 +10,7 @@ import OtherWork from './components/OtherWork';
 import GetInTouch from './components/GetInTouch';
 import Resume from './components/Resume';
 import SocialBadges from './components/SocialBadges';
+import Section from './components/Section';
 
 interface Section {
   title: string;
@@ -115,10 +117,6 @@ export default function Home() {
     };
   }, [activeSection]);
 
-  useEffect(() => {
-    scrollToSection(0,0)
-  }, [])
-
   const scrollToSection = useCallback((categoryIndex: number, sectionIndex: number) => {
     console.log(`Scrolling to section: ${categoryIndex}-${sectionIndex}`);
     const sectionId = `${categoryIndex}-${sectionIndex}`;
@@ -136,89 +134,94 @@ export default function Home() {
   console.log('Rendering with active section:', activeSection);
 
   return (
-    <div className="flex relative mx-auto max-w-[1280px] px-6 justify-end">
-      <div className="bg-[#020411] border-b border-blue-light md:bg-inherit w-full fixed top-0 left-0 right-0 z-50 p-4 md:p-0 md:w-[30%] md:sticky md:h-screen flex flex-col md:items-center md:justify-center">
-        <div className="flex items-center gap-4 mb-4 w-full">
-          <ProfilePicture />
-          <div className="flex flex-col">
-            <div className="text-lg font-bold">Joshua Montgomery</div>
-            <div className="text-sm font-light">Full Stack Engineer</div>
-            <SocialBadges />
+    <div className="flex relative mx-auto max-w-[1280px] md:px-4 xl:px-24 justify-end">
+      {/* nav bar */}
+      <div className="bg-[#020411] border-b border-blue-light md:border-none md:bg-inherit w-full fixed top-0 left-0 right-0 z-50 p-4 md:py-24 md:px-0 md:w-[45%] md:sticky md:h-screen flex flex-col md:items-center md:justify-between">   
+        {/* pfp */}
+        <div className='w-full'>
+          <div className="flex items-center gap-4 mb-4 w-full">
+            <ProfilePicture />
+            <div className="flex flex-col">
+              <div className="text-lg lg:text-3xl font-bold">Joshua Montgomery</div>
+              <div className="text-sm lg:text-xl font-light">Senior Front End Engineer</div>
+              <SocialBadges />
+            </div>
           </div>
-        </div>
-        
-        {/* Mobile dropdown */}
-        <div className="md:hidden bg-[#020411]">
-          <div 
-            className="cursor-pointer p-2 border rounded border-blue-light"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          >
-            {CATEGORIES[activeSection.categoryIndex].name} - {CATEGORIES[activeSection.categoryIndex].sections[activeSection.sectionIndex].title}
+          
+          {/* Mobile dropdown */}
+          <div className="md:hidden bg-[#020411]">
+            <div 
+              className="cursor-pointer p-2 border rounded border-blue-light"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            >
+              {CATEGORIES[activeSection.categoryIndex].name} - {CATEGORIES[activeSection.categoryIndex].sections[activeSection.sectionIndex].title}
+            </div>
+            {isDropdownOpen && (
+              <div className="absolute top-full left-0 right-0 border border-blue-light mt-4 p-2 bg-[#020411] mx-4 rounded">
+                {CATEGORIES.map((category, categoryIndex) => (
+                  <div key={categoryIndex} className="mb-2">
+                    <div className="font-bold">{category.name}</div>
+                    {category.sections.map((section, sectionIndex) => (
+                      <div 
+                        key={sectionIndex} 
+                        className="pl-4 py-1 cursor-pointer"
+                        onClick={() => {
+                          scrollToSection(categoryIndex, sectionIndex);
+                          setIsDropdownOpen(false);
+                        }}
+                      >
+                        {section.title}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-          {isDropdownOpen && (
-            <div className="absolute top-full left-0 right-0 border border-blue-light mt-4 p-2 bg-[#020411] mx-4 rounded">
-              {CATEGORIES.map((category, categoryIndex) => (
-                <div key={categoryIndex} className="mb-2">
-                  <div className="font-bold">{category.name}</div>
+
+          {/* Desktop navigation */}
+          <div className="hidden md:block space-y-2 w-full ">
+            {CATEGORIES.map((category, categoryIndex) => (
+              <div key={categoryIndex} className="relative">
+                <div 
+                  className={`cursor-pointer px-2 py-1 rounded ${
+                    activeSection.categoryIndex === categoryIndex ? 'font-bold' : 'font-light'
+                  }`} 
+                  onClick={() => scrollToCategory(categoryIndex)}
+                >
+                  {category.name}
+                </div>
+                <ul className="ml-5 pl-3 mt-2 relative">
                   {category.sections.map((section, sectionIndex) => (
-                    <div 
-                      key={sectionIndex} 
-                      className="pl-4 py-1 cursor-pointer"
-                      onClick={() => {
-                        scrollToSection(categoryIndex, sectionIndex);
-                        setIsDropdownOpen(false);
-                      }}
+                    <li
+                      key={sectionIndex}
+                      className={`cursor-pointer px-2 py-1 rounded relative w-fit ${
+                        activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex 
+                          ? 'font-bold' 
+                          : 'font-light'
+                      }`}
+                      onClick={() => scrollToSection(categoryIndex, sectionIndex)}
                     >
                       {section.title}
-                    </div>
+                      <div 
+                        className={`absolute bottom-0 left-0 h-[1px] rounded bg-[rgb(39,190,255)] transition-all duration-300 ease-in-out ${activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex ? 'w-full' : 'w-0'}`}
+                      />
+                    </li>
                   ))}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Desktop navigation */}
-        <div className="hidden md:block space-y-2 w-full ">
-          {CATEGORIES.map((category, categoryIndex) => (
-            <div key={categoryIndex} className="relative">
-              <div 
-                className={`cursor-pointer px-2 py-1 rounded ${
-                  activeSection.categoryIndex === categoryIndex ? 'font-bold' : 'font-light'
-                }`} 
-                onClick={() => scrollToCategory(categoryIndex)}
-              >
-                {category.name}
+                  <div 
+                    className={`absolute left-0 w-[1px] bg-[rgb(39,190,255)] rounded transition-all duration-300 ease-in-out top-0 ${activeSection.categoryIndex === categoryIndex ? 'h-full' : 'h-0'}`}
+                  />
+                </ul>
               </div>
-              <ul className="ml-5 pl-3 mt-2 relative">
-                {category.sections.map((section, sectionIndex) => (
-                  <li
-                    key={sectionIndex}
-                    className={`cursor-pointer px-2 py-1 rounded relative w-fit ${
-                      activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex 
-                        ? 'font-bold' 
-                        : 'font-light'
-                    }`}
-                    onClick={() => scrollToSection(categoryIndex, sectionIndex)}
-                  >
-                    {section.title}
-                    <div 
-                      className={`absolute bottom-0 left-0 h-[1px] rounded bg-[rgb(39,190,255)] transition-all duration-300 ease-in-out ${activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex ? 'w-full' : 'w-0'}`}
-                    />
-                  </li>
-                ))}
-                <div 
-                  className={`absolute left-0 w-[1px] bg-[rgb(39,190,255)] rounded transition-all duration-300 ease-in-out top-0 ${activeSection.categoryIndex === categoryIndex ? 'h-full' : 'h-0'}`}
-                />
-              </ul>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+        <div className="hidden md:flex w-full text-xs pl-2 font-light">© joshmontech.com 2024</div>
       </div>
 
-      <div ref={scrollContainerRef} className="w-full md:w-[70%] overflow-y-auto mt-32 md:mt-0">
+      {/* sections */}
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto mt-[165px] md:mt-24">
         <div className="">
-          <div className="h-[30vh]"></div>
           {CATEGORIES.map((category, categoryIndex) => (
             category.sections.map((section, sectionIndex) => {
               const SectionComponent = section.component;
@@ -232,9 +235,11 @@ export default function Home() {
                       console.log(`Ref set for section: ${categoryIndex}-${sectionIndex}`);
                     }
                   }}
-                  className="min-h-screen md:min-h-[70vh] border border-blue-light w-full mb-4 flex flex-col items-center justify-center"
+                  className="border border-blue-light w-full mb-4"
                 >
-                  <SectionComponent />
+                  {/* <Section> */}
+                    <SectionComponent />
+                  {/* </Section> */}
                 </div>
               );
             })
