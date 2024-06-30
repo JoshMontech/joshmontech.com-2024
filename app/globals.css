@@ -4,7 +4,7 @@
 
 :root {
   --foreground-rgb: #fff;
-  --background-start-rgb: rgb(22 22 34);
+  --background-start-rgb: #161622;
   --background-end-rgb: #020411;
 }
 
@@ -58,20 +58,20 @@ body {
 }
 
 .underline-animation {
-  position: relative;
+position: relative;
 }
 
 .underline-animation::after {
-  content: '';
-  position: absolute;
-  bottom: 0px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background-color: rgb(39 190 255); /* Light blue color */
-  transition: width 0.3s ease-in-out;
+content: '';
+position: absolute;
+bottom: 0px;
+left: 0;
+width: 0;
+height: 1px;
+background-color: rgb(39 190 255); /* Light blue color */
+transition: width 0.3s ease-in-out;
 }
 
 .underline-animation.active::after {
-  width: 100%;
+width: 100%;
 }

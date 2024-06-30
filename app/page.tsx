@@ -10,7 +10,21 @@ import GetInTouch from './components/GetInTouch';
 import Resume from './components/Resume';
 import SocialBadges from './components/SocialBadges';
 
-const CATEGORIES = [
+interface Section {
+  title: string;
+  component: React.ComponentType;
+}
+
+interface Category {
+  name: string;
+  sections: Section[];
+}
+
+interface MostVisibleSection {
+  categoryIndex: number; sectionIndex: number 
+}
+
+const CATEGORIES: Category[] = [
   {
     name: 'Experience',
     sections: [
@@ -38,9 +52,9 @@ const CATEGORIES = [
 export default function Home() {
   const [activeSection, setActiveSection] = useState({ categoryIndex: 0, sectionIndex: 0 });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const sectionRefs = useRef({});
-  const scrollContainerRef = useRef(null);
-  const intersectionRatios = useRef({});
+  const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const intersectionRatios = useRef<{ [key: string]: number }>({});
 
   useEffect(() => {
     console.log('Setting up Intersection Observer');
@@ -54,7 +68,7 @@ export default function Home() {
         });
 
         let maxRatio = 0;
-        let mostVisibleSection = null;
+        let mostVisibleSection: MostVisibleSection | null = null;
 
         Object.entries(intersectionRatios.current).forEach(([key, ratio]) => {
           if (ratio > maxRatio) {
@@ -67,10 +81,10 @@ export default function Home() {
         console.log('Current intersection ratios:', intersectionRatios.current);
         console.log('Most visible section:', mostVisibleSection);
         console.log('Current active section:', activeSection);
-
+        
         if (mostVisibleSection && (
-          mostVisibleSection.categoryIndex !== activeSection.categoryIndex ||
-          mostVisibleSection.sectionIndex !== activeSection.sectionIndex
+          (mostVisibleSection as MostVisibleSection).categoryIndex !== activeSection.categoryIndex ||
+          (mostVisibleSection as MostVisibleSection).sectionIndex !== activeSection.sectionIndex
         )) {
           console.log('Updating active section to:', mostVisibleSection);
           setActiveSection(mostVisibleSection);
@@ -190,20 +204,13 @@ export default function Home() {
                     {section.title}
                     <div 
                       className={`absolute bottom-0 left-0 h-[1px] rounded bg-[rgb(39,190,255)] transition-all duration-300 ease-in-out ${activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex ? 'w-full' : 'w-0'}`}
-                      // style={{
-                      //   width: activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex ? '100%' : '0%'
-                      // }}
                     />
                   </li>
                 ))}
                 <div 
-                className={`absolute left-0 w-[1px] bg-[rgb(39,190,255)] rounded transition-all duration-300 ease-in-out top-0 ${activeSection.categoryIndex === categoryIndex ? 'h-full' : 'h-0'}`}
-                // style={{
-                //   height: activeSection.categoryIndex === categoryIndex ? `${category.sections.length * 1.75}rem` : '0',
-                // }}
-              />
+                  className={`absolute left-0 w-[1px] bg-[rgb(39,190,255)] rounded transition-all duration-300 ease-in-out top-0 ${activeSection.categoryIndex === categoryIndex ? 'h-full' : 'h-0'}`}
+                />
               </ul>
-              
             </div>
           ))}
         </div>
