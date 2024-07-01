@@ -134,7 +134,7 @@ export default function Home() {
   console.log('Rendering with active section:', activeSection);
 
   return (
-    <div className="flex relative mx-auto max-w-[1280px] md:px-4 xl:px-24 justify-end">
+    <div className="flex relative mx-auto max-w-[1280px] px-4 xl:px-24 justify-end">
       {/* nav bar */}
       <div className="bg-[#020411] border-b border-blue-light md:border-none md:bg-inherit w-full fixed top-0 left-0 right-0 z-50 p-4 md:py-24 md:px-0 md:w-[45%] md:sticky md:h-screen flex flex-col md:items-center md:justify-between">   
         {/* pfp */}
@@ -220,7 +220,7 @@ export default function Home() {
       </div>
 
       {/* sections */}
-      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto mt-[165px] md:mt-24">
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto mt-[181px] md:mt-24">
         <div className="">
           {CATEGORIES.map((category, categoryIndex) => (
             category.sections.map((section, sectionIndex) => {
@@ -235,7 +235,7 @@ export default function Home() {
                       console.log(`Ref set for section: ${categoryIndex}-${sectionIndex}`);
                     }
                   }}
-                  className="border border-blue-light w-full mb-4"
+                  className="w-full mb-4"
                 >
                   {/* <Section> */}
                     <SectionComponent />

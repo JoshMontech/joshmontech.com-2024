@@ -1,10 +1,21 @@
 import React from 'react'
+import Image from 'next/image'
 import Section from './Section'
-
+import { JOBS } from '../constants/jobs'
+import JobTools from './JobTools'
 const Jobs = () => {
   return (
     <Section>
-    <div>As a Senior Full Stack Developer at BuildASign since 2019, I&apos;ve spearheaded numerous impactful projects. I created a dynamic Next.js product template system that significantly reduced time-to-market for new products. My implementation of a CI/CD pipeline using AWS services modernized our ecosystem, dramatically improving release efficiency. I also led the design and development of an accounts dashboard with OAuth SSO and Stripe integration. Prior to this, at Adjacent Technologies, I delivered a crucial fulfillment dashboard for a major B2B contract and developed a physical records tracking web app that enhanced client workflow efficiency. These experiences showcase my ability to lead complex projects, optimize processes, and deliver tangible business value through innovative web solutions.</div>
+    <div className="flex flex-col gap-4">
+      <div className="text-2xl font-bold">My Experience</div>
+      {JOBS.map(job => (
+        <div key={job.name} className="mb-4">
+          <div className="mb-2 flex items-center gap-2"><Image height={32} width={32} src={job.iconPath} alt={job.name} /><span><span className="font-bold">{job.name}</span> - {job.role}</span></div>
+          <div className="font-light text-sm mb-2">{job.blurb}</div>
+          <JobTools job={job} />
+        </div>
+      ))}
+    </div>
     </Section>
   )
 }
