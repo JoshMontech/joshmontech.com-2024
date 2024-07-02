@@ -4,7 +4,7 @@ import { FaFileAlt } from "react-icons/fa";
 const iconDimension = 20;
 const SocialBadges = () => {
   return (
-    <div className="flex gap-4 mt-1 items-center">
+    <div className="flex gap-2 mt-1 items-center">
         <a href="https://github.com/JoshMontech"><FaGithub size={iconDimension} className="fill-white hover:fill-blue-light" /></a>
         <a href="https://linkedin.com/joshmontech"><FaLinkedin size={iconDimension} className="fill-white hover:fill-blue-light" /></a>
         <a href="https://codepen.io/jmontech"><FaCodepen size={iconDimension} className="fill-white hover:fill-blue-light" /></a>
