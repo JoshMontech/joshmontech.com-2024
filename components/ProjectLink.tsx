@@ -3,10 +3,10 @@ import { FaCodepen, FaGithub } from "react-icons/fa6"
 const getImage = (imageType: ISource["type"]) => {
   switch (imageType) {
     case('codepen'): {
-      return <FaCodepen />
+      return <FaCodepen className="hover:fill-blue-light" />
     }
     case('github'): {
-      return <FaGithub />
+      return <FaGithub className="hover:fill-blue-light" />
     }
     default: {
       return <></>;
@@ -16,7 +16,7 @@ const getImage = (imageType: ISource["type"]) => {
 const ProjectLink = ({source} : {source: ISource}) => {
   const SourceImage = getImage(source.type);
   return (
-    <a href={source.link} className="absolute right-0 top-1/2 -translate-y-1/2">
+    <a href={source.link}>
       {SourceImage}
     </a>
   )
