@@ -1,16 +1,15 @@
 "use client"
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import Image from 'next/image';
-import ProfilePicture from './components/ProfilePicture';
-import About from './components/About';
-import FeaturedProjects from './components/FeaturedProjects';
-import Skills from './components/Skills';
-import Jobs from './components/Jobs';
-import OtherWork from './components/OtherWork';
-import GetInTouch from './components/GetInTouch';
-import Resume from './components/Resume';
-import SocialBadges from './components/SocialBadges';
-import Section from './components/Section';
+import ProfilePicture from '../components/ProfilePicture';
+import About from '../components/About';
+import FeaturedProjects from '../components/FeaturedProjects';
+import Skills from '../components/Skills';
+import Jobs from '../components/Jobs';
+import OtherWork from '../components/OtherWork';
+import GetInTouch from '../components/GetInTouch';
+import Resume from '../components/Resume';
+import SocialBadges from '../components/SocialBadges';
+import Section from '../components/Section';
 
 interface Section {
   title: string;
@@ -28,18 +27,17 @@ interface MostVisibleSection {
 
 const CATEGORIES: Category[] = [
   {
-    name: 'Experience',
+    name: 'About Me',
     sections: [
-      { title: 'About Me', component: About },
+      { title: 'Summary', component: About },
       { title: 'Skills & Technologies', component: Skills },
-      { title: 'Work Experience', component: Jobs }
     ]
   },
   {
-    name: 'Projects',
+    name: 'Experience',
     sections: [
-      { title: 'Featured Projects', component: FeaturedProjects },
-      { title: 'Other Work', component: OtherWork },
+      { title: 'Professional', component: Jobs },
+      { title: 'Projects', component: FeaturedProjects },
     ]
   },
   {
