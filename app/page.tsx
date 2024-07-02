@@ -6,7 +6,6 @@ import FeaturedProjects from '../components/FeaturedProjects';
 import Skills from '../components/Skills';
 import Jobs from '../components/Jobs';
 import GetInTouch from '../components/GetInTouch';
-import Resume from '../components/Resume';
 import SocialBadges from '../components/SocialBadges';
 import Section from '../components/Section';
 
@@ -43,7 +42,6 @@ const CATEGORIES: Category[] = [
     name: 'Contact',
     sections: [
       { title: 'Get in Touch', component: GetInTouch },
-      { title: 'Resume', component: Resume },
     ]
   }
 ];

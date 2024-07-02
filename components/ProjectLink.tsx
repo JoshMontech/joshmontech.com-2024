@@ -16,7 +16,7 @@ const getImage = (imageType: ISource["type"]) => {
 const ProjectLink = ({source} : {source: ISource}) => {
   const SourceImage = getImage(source.type);
   return (
-    <a href={source.link}>
+    <a href={source.link} className="absolute right-0 top-1/2 -translate-y-1/2">
       {SourceImage}
     </a>
   )
