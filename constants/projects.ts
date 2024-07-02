@@ -1,43 +1,63 @@
-interface ISource {
+export interface ISource {
     link: string;
     type: 'github' | 'codepen' | undefined
 }
 export interface IProject {
     name: string;
     blurb: string;
+    link: string;
     toolNames: string[];
     source: ISource;
 }
 
 export const PROJECTS: IProject[] = [
     {
-        name: 'Loot Labs',
-        source: {link: '', type: 'github'},
-        blurb: 'Lead precursory NextJS 14 and Amplify V6 migration followed by redesign of site UX, UI, and architecture, including Zustand global state management, SEO optimization, and static/SSR strategy. Aligned TailwindCSS theme with Figma design system.',
-        toolNames: ['NextJS','GraphQL','Figma', 'React','Tailwind','TypeScript', 'AWS Amplify', 'AWS Cognito', 'Github']
+        name: 'joshmontech.com',
+        source: {link: 'https://github.com/JoshMontech/joshmontech.com-2024', type: 'github'},
+        link: 'https://joshmontech.com',
+        blurb: 'Design challenge to create intuitive design system and UI with programmatically generated re-usable elements enforcing strong and intuitive layout choices. Made from the ground up with zero templates.',
+        toolNames: ['NextJS','React', 'Figma','Tailwind','TypeScript','Vercel', 'Github']
     },
     {
-        name: 'BuildASign',
-        source: {link: '', type: 'codepen'},
-        blurb: 'Served as UX and frontend architecture SME. Collaborated with team and executive stakeholders to create internal CMS and AWS CI/CD pipeline for product and site templates. Lead efforts to maximum SEO search score by reaching maximum Google Core Web Vitals scores across our company`s sites. Lead mentor for 15-person off-shore Indian team, in charge of front end standardization and code reviews.',
-        toolNames: ['NextJS', 'Tailwind', 'React', 'SASS', 'GraphQL', 'DatoCMS', '.NET', 'Netlify', 'SQL', 'AWS CloudFront', 'AWS CodeBuild', 'AWS S3', 'AWS Lambda', 'AdobeXD']
+        name: 'Prog Logger',
+        source: {link: 'https://github.com/JoshMontech/Prog-Logger', type: 'github'},
+        link: 'https://prog-logger.vercel.app/static/102112c3-1b37-4eaf-935f-5433c3e51eb4',
+        blurb: 'First proof of data-driven NextJS App Router application with serverside/clientside components. Statistical dashboard to track progress as my friends and I learned how to fight a newly released boss in our favorite video game, Lost Ark. Allows for users to create groups, reporting sessions within those groups, and micro/macro views of their stats.',
+        toolNames: ['NextJS','React','Tailwind', 'Prisma', 'SQL', 'TypeScript', 'Vercel', 'Github']
     },
     {
-        name: 'Adjacent Technologies',
-        source: {link: '', type: 'github'},
-        blurb: 'Designed, engineered, developed, and shipped client onPrem applications, building them from the ground up, fulfilling multi-million dollar contracts across the United States and Canada.',
-        toolNames: ['React', 'TypeScript','Sketch', 'AdobePS', 'SASS', 'SQL']
+        name: 'Cross-sell Responsive UI',
+        source: {link: 'https://codepen.io/jmontech/full/OJYdwJb', type: 'codepen'},
+        link: 'https://codepen.io/jmontech/full/OJYdwJb',
+        blurb: 'Responsive UI made for .NET cshtml page to intergrate with razor and generate cross-sell page in user flow.',
+        toolNames: ['HTML5','CSS3','SASS']
     },
     {
-        name: 'IBM Design',
-        source: {link: '', type: 'github'},
-        blurb: 'Collaborated with incubator to research, pitch, develop and ship Weather Underground`s first air quality solution in Southeast Asia. Proved in SEA, was adopted across wunderground.com North America in 2021.',
-        toolNames: ['React', 'TypeScript', 'HTML5', 'CSS3', 'NodeJS', 'Sketch']
+        name: 'bjmontgomery2025.com',
+        source: {link: 'https://github.com/JoshMontech/wedding-website', type: 'github'},
+        link: 'https://bjmontgomery2025.com',
+        blurb: 'Simple responsive save-the-date wedding website and design excercise in typeface and color usage to share with friends and family, with dynamically AI-generated background imagery made with midjourney.',
+        toolNames: ['NextJS','React','Tailwind','Vercel', 'Github']
     },
     {
-        name: 'uShip',
-        source: {link: '', type: 'github'},
-        blurb: 'Developed and shipped first site redesign made in React, homepage exposed to widest breadth of users in the US, Germany, and greater EU.',
-        toolNames: ['React', 'HTML5', 'CSS3', '.NET']
+        name: 'Product Page Info Tabs Responsive UI',
+        source: {link: 'https://codepen.io/jmontech/pen/mdYmmyp', type: 'codepen'},
+        link: 'https://codepen.io/jmontech/pen/mdYmmyp',
+        blurb: 'Responsive UI made for .NET cshtml page to intergrate with razor and generate cross-sell page in user flow.',
+        toolNames: ['HTML5','CSS3','SASS']
+    },
+    {
+        name: 'Meteor Marker',
+        source: {link: 'https://github.com/JoshMontech/brel-meteors', type: 'github'},
+        link: 'https://brel-meteors.vercel.app',
+        blurb: 'Simple timer mapped to internal timers of boss fights, trivializing what was previously impossible to track in Lost Ark\'s most challenging fight, Infero Brelshaza.',
+        toolNames: ['NextJS','React', 'Tailwind', 'Vercel', 'Github']
+    },
+    {
+        name: 'JMontech Next Template',
+        source: {link: 'https://github.com/JoshMontech/jmontech-next-template', type: 'github'},
+        link: 'https://github.com/JoshMontech/jmontech-next-template',
+        blurb: 'NextJS Boilerplate Template built to enforce high scrutiny linting along with precommit hooks with husky, as well as tailwind (before it was automatically added).',
+        toolNames: ['NextJS', 'TypeScript', 'Github']
     }
 ]

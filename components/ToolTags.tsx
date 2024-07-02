@@ -1,13 +1,12 @@
 import React from 'react';
 import { TOOL_SECTIONS, ITool } from '../constants/tools';
-import { JOBS, IJob } from '../constants/jobs';
 import ToolTag from './ToolTag';
 
-interface JobToolsProps {
-  job: IJob;
+interface ToolTagsProps {
+  toolNames: string[]
 }
 
-const JobTools: React.FC<JobToolsProps> = ({ job }) => {
+const ToolTags: React.FC<ToolTagsProps> = ({ toolNames }) => {
   const findToolObject = (toolName: string): ITool | null => {
     for (const section of TOOL_SECTIONS) {
       const tool = section.tools.find(t => t.name === toolName);
@@ -19,7 +18,7 @@ const JobTools: React.FC<JobToolsProps> = ({ job }) => {
   return (
     <div>
       <div className="flex gap-1 flex-wrap">
-        {job.toolNames.map((toolName, index) => {
+        {toolNames.map((toolName, index) => {
           const tool = findToolObject(toolName);
           return tool ? (
             <ToolTag tool={tool} key={tool.name} />
@@ -32,4 +31,4 @@ const JobTools: React.FC<JobToolsProps> = ({ job }) => {
   );
 };
 
-export default JobTools;
+export default ToolTags;

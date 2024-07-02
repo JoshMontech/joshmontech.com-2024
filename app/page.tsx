@@ -5,7 +5,6 @@ import About from '../components/About';
 import FeaturedProjects from '../components/FeaturedProjects';
 import Skills from '../components/Skills';
 import Jobs from '../components/Jobs';
-import OtherWork from '../components/OtherWork';
 import GetInTouch from '../components/GetInTouch';
 import Resume from '../components/Resume';
 import SocialBadges from '../components/SocialBadges';

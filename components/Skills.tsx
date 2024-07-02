@@ -9,6 +9,7 @@ const Skills = () => {
     <Section>
         <div className="flex flex-col gap-4">
         <div className="text-2xl font-bold">My Favorite Tools</div>
+        <div className="h-0.5 rounded-full bg-blue-light"></div>
             <div className="font-light text-sm">My technical toolkit is centered around cutting-edge web technologies. I excel in building robust, scalable applications using React and Next.js, leveraging the power of TypeScript for type-safe code. With Tailwind CSS, I create sleek, responsive designs efficiently. My expertise extends to AWS services, enabling me to architect and deploy cloud-native solutions. From crafting dynamic user interfaces to implementing serverless backends, I bring a full-stack perspective to every project. These skills allow me to deliver high-performance, maintainable web applications that meet modern development standards and business needs.</div>
             {/* NextJS */}
             {TOOL_SECTIONS.map(section => (
