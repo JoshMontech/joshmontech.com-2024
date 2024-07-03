@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css";
 
 const poppins = Poppins({
@@ -57,7 +58,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.className} ${poppins.variable} text-white`}>{children}</body>
+      <body className={`${poppins.className} ${poppins.variable} text-white`}>{children}<SpeedInsights /></body>
       <GoogleAnalytics gaId="G-59L5T8RB6F" />
     </html>
   );
