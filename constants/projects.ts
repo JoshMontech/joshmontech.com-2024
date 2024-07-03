@@ -22,7 +22,7 @@ export const PROJECTS: IProject[] = [
         name: 'Prog Logger',
         source: {link: 'https://github.com/JoshMontech/Prog-Logger', type: 'github'},
         link: 'https://prog-logger.vercel.app/static/102112c3-1b37-4eaf-935f-5433c3e51eb4',
-        blurb: 'First proof of data-driven NextJS App Router application with serverside/clientside components. Statistical dashboard to track progress as my friends and I learned how to fight a newly released boss in our favorite video game, Lost Ark. Allows for users to create groups, reporting sessions within those groups, and micro/macro views of their stats.',
+        blurb: 'First proof of data-driven NextJS App Router application with serverside/clientside components. Statistical dashboard to track progress as my friends and I learned how to fight a newly released boss in our favorite video game, Lost Ark. Allows for users to create groups, report sessions within those groups, and view micro/macro breakdowns of their stats.',
         toolNames: ['NextJS','React','Tailwind', 'Prisma', 'SQL', 'TypeScript', 'Vercel', 'Github']
     },
     {

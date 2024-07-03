@@ -21,7 +21,7 @@ export const JOBS: IJob[] = [
         name: 'BuildASign-Cimpress',
         link: 'https://cimpress.com/our-businesses',
         role: 'Senior Front End Developer',
-        blurb: 'Served as UX and frontend architecture SME. Collaborated with team and executive stakeholders to create internal CMS and AWS CI/CD pipeline for product and site templates. Lead efforts to maximum SEO search score by reaching maximum Google Core Web Vitals scores across our company`s sites. Lead mentor for 15-person off-shore Indian team, in charge of front end standardization and code reviews.',
+        blurb: 'Served as UX and frontend architecture SME. Collaborated with team and executive stakeholders to create internal CMS and AWS CI/CD pipeline for product and site templates. Lead efforts to maximum SEO search score by reaching maximum Google Core Web Vitals scores across our company`s sites. Lead mentor for 15-person off-shore team, in charge of front end standardization and code reviews.',
         toolNames: ['NextJS', 'Tailwind', 'React', 'SASS', 'GraphQL', 'DatoCMS', '.NET', 'Netlify', 'SQL', 'AWS CloudFront', 'AWS CodeBuild', 'AWS S3', 'AWS Lambda', 'AdobeXD']
     },
     {
