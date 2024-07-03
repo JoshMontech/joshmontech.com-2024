@@ -232,9 +232,7 @@ export default function Home() {
                   }}
                   className="w-full mb-4"
                 >
-                  {/* <Section> */}
-                    <SectionComponent />
-                  {/* </Section> */}
+                  <SectionComponent />
                 </div>
               );
             })
