@@ -8,7 +8,7 @@ import Jobs from '../components/Jobs';
 import GetInTouch from '../components/GetInTouch';
 import SocialBadges from '../components/SocialBadges';
 import Section from '../components/Section';
-import { GlowCapture } from '@codaworks/react-glow';
+import { Glow, GlowCapture } from '@codaworks/react-glow';
 
 interface Section {
   title: string;
@@ -141,8 +141,8 @@ export default function Home() {
           <div className="flex items-center gap-4 mb-4 w-full">
             <ProfilePicture />
             <div className="flex flex-col">
-              <div className="text-lg lg:text-3xl font-bold">Joshua Montgomery</div>
-              <div className="text-sm lg:text-xl font-light">Senior Front End Engineer</div>
+              <div className="text-lg lg:text-3xl font-bold glow:text-blue-light">Joshua Montgomery</div>
+              <div className="text-sm lg:text-xl font-light glow:text-light-4">Senior Front End Engineer</div>
               <SocialBadges />
             </div>
           </div>
