@@ -165,12 +165,12 @@ export const TOOL_SECTIONS = [
             {
                 name: 'AdobeXD',
                 icon:  SiAdobexd,
-                color: '#450134'
+                color: '#F75EED'
             },
             {
                 name: 'AdobePS',
                 icon:  SiAdobephotoshop,
-                color: '#011D33'
+                color: '#2FA7FE'
             },
             {
                 name: 'Sketch',

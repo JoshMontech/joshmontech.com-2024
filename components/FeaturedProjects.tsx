@@ -10,7 +10,7 @@ const FeaturedProjects = () => {
         <div className="text-2xl font-bold">Featured Projects</div>
         <div className="h-0.5 rounded-full bg-blue-light"></div>
           {PROJECTS.map(project => (
-          <div key={project.name} className="mb-4 last-of-type:mb-0">
+          <div className="mb-4 last-of-type:mb-0" key={project.name}>
             <div className="font-bold flex items-center gap-2 mb-2"><a className="hover:text-blue-light" href={project.link}>{project.name}</a><ProjectLink source={project.source} /></div>
             <div className="font-light text-sm mb-2">{project.blurb}</div>
             <ToolTags toolNames={project.toolNames} />
