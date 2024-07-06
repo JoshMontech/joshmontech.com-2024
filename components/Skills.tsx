@@ -14,7 +14,7 @@ const Skills = () => {
             {/* NextJS */}
             {TOOL_SECTIONS.map(section => (
               <div className="flex flex-col" key={section.name}>
-                <div className="">{section.name}</div>
+                <div className="text-md font-bold">{section.name}</div>
                 <div className="flex gap-x-1 gap-y-0 flex-wrap" >
                   {section.tools.map(tool => <ToolTag tool={tool} key={tool.name} />)}
                 </div>
