@@ -24,7 +24,7 @@ export const TOOL_SECTIONS = [
             {
                 name: 'NextJS',
                 icon:  SiNextdotjs,
-                color: 'black',
+                color: 'white',
             },
             {
                 name: 'React',
@@ -150,7 +150,7 @@ export const TOOL_SECTIONS = [
             {
                 name: 'Vercel',
                 icon:  SiVercel,
-                color: 'black'
+                color: 'white'
             },
         ]
     },

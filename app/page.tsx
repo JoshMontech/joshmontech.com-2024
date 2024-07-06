@@ -130,6 +130,7 @@ export default function Home() {
   console.log('Rendering with active section:', activeSection);
 
   return (
+    <div>
     <GlowCapture>
     <div className="flex relative mx-auto max-w-[1280px] px-4 xl:px-24 justify-end">
       {/* nav bar */}
@@ -244,5 +245,6 @@ export default function Home() {
       </div>
     </div>
     </GlowCapture>
+    </div>
   );
 }
