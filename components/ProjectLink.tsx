@@ -1,5 +1,7 @@
 import { ISource } from "@/constants/projects"
 import { FaCodepen, FaGithub } from "react-icons/fa6"
+import { FaLink } from "react-icons/fa";
+
 const getImage = (imageType: ISource["type"]) => {
   switch (imageType) {
     case('codepen'): {
@@ -9,7 +11,7 @@ const getImage = (imageType: ISource["type"]) => {
       return <FaGithub className="hover:fill-blue-light" />
     }
     default: {
-      return <></>;
+      return <FaLink className="hover:fill-blue-light" />;
     }
   }
 }

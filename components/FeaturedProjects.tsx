@@ -11,7 +11,11 @@ const FeaturedProjects = () => {
         <div className="h-0.5 rounded-full bg-blue-light"></div>
           {PROJECTS.map(project => (
           <div className="mb-4 last-of-type:mb-0" key={project.name}>
-            <div className="font-bold flex items-center gap-2 mb-2"><a className="hover:text-blue-light" href={project.link}>{project.name}</a><ProjectLink source={project.source} /></div>
+            <div className="font-bold flex items-center gap-2 mb-2">
+              <a className="hover:text-blue-light" href={project.link}>{project.name}</a>
+              {project.sources.map(source => <ProjectLink source={source} key={source.link} />)}
+              
+            </div>
             <div className="font-light text-sm mb-2">{project.blurb}</div>
             <ToolTags toolNames={project.toolNames} />
           </div>
