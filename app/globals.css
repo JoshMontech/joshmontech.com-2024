@@ -75,3 +75,13 @@ transition: width 0.3s ease-in-out;
 .underline-animation.active::after {
 width: 100%;
 }
+
+[glow] .glow-text {
+  color: var(--glow-color);
+}
+[glow] .glow-fill {
+  fill: var(--glow-color);
+}
+[glow] .glow-border {
+  border-color: var(--glow-color);
+}

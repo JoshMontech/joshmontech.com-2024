@@ -8,6 +8,7 @@ import Jobs from '../components/Jobs';
 import GetInTouch from '../components/GetInTouch';
 import SocialBadges from '../components/SocialBadges';
 import Section from '../components/Section';
+import { GlowCapture } from '@codaworks/react-glow';
 
 interface Section {
   title: string;
@@ -129,6 +130,7 @@ export default function Home() {
   console.log('Rendering with active section:', activeSection);
 
   return (
+    <GlowCapture>
     <div className="flex relative mx-auto max-w-[1280px] px-4 xl:px-24 justify-end">
       {/* nav bar */}
       <div className="bg-[#020411] border-b border-blue-light md:border-none md:bg-inherit w-full fixed top-0 left-0 right-0 z-50 p-4 md:py-24 md:px-0 md:w-[45%] md:sticky md:h-screen flex flex-col md:items-center md:justify-between">   
@@ -241,5 +243,6 @@ export default function Home() {
         </div>
       </div>
     </div>
+    </GlowCapture>
   );
 }

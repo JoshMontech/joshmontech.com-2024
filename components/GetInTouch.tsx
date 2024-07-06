@@ -14,7 +14,6 @@ const GetInTouch = () => {
       <div className="h-0.5 rounded-full bg-blue-light"></div>
       <div className="font-light">Hope you enjoyed exploring my portfolio. Please feel free to contact me below or via my contact info in my resume. Have a great day!</div>
       <SocialBadges />
-      {/* <button onClick={() => contactJosh()}>contact me</button> */}
       <EmailForm />
     </div>
     </Section>

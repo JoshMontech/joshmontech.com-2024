@@ -43,7 +43,7 @@ const EmailForm = () => {
         <label className="text-white font-bold">Summary</label>
         <textarea className={`rounded px-2 py-1 ${errors.email ? 'mb-1': 'mb-4'}`} {...register("summary", {required: 'Summary is required', maxLength: 1000 })} />
         {errors.summary && <p className="text-blue-light">{errors.summary.message}</p>}
-        <button className="rounded font-bold text-white px-2 py-1 border-blue-light border">Submit</button>
+        <button className="rounded font-bold bg-opacity-40 bg-light-5 hover:bg-light-4 text-white px-2 py-1 border-light-border border">Submit</button>
       </Form>
       : <div className="flex gap-2 items-center">Thanks for the message!<FaCheck className="fill-green-400" /></div>
     )
