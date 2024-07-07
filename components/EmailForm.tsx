@@ -30,7 +30,7 @@ const EmailForm = () => {
                     }}
                     onError={(response) => {
                         setLoading(false)
-                        console.log('failure', response)
+                        // console.log('failure', response)
                     }}
                 >
                     <label className="text-white font-bold">Email</label>

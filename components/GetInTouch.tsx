@@ -4,7 +4,7 @@ import SocialBadges from './SocialBadges'
 import EmailForm from './EmailForm'
 const contactJosh = async () => {
   const response = await fetch('/api/send', {method:'POST'})
-  console.log(response)
+  // console.log(response)
 }
 const GetInTouch = () => {
   return (

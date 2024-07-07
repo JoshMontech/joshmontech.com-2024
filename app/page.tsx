@@ -55,14 +55,14 @@ export default function Home() {
   const intersectionRatios = useRef<{ [key: string]: number }>({});
 
   useEffect(() => {
-    console.log('Setting up Intersection Observer');
+    // console.log('Setting up Intersection Observer');
     const observer = new IntersectionObserver(
       (entries) => {
-        console.log('Intersection Observer callback triggered');
+        // console.log('Intersection Observer callback triggered');
         entries.forEach((entry) => {
           const [categoryIndex, sectionIndex] = entry.target.id.split('-').map(Number);
           intersectionRatios.current[`${categoryIndex}-${sectionIndex}`] = entry.intersectionRatio;
-          console.log(`Section ${categoryIndex}-${sectionIndex} intersection ratio: ${entry.intersectionRatio}`);
+          // console.log(`Section ${categoryIndex}-${sectionIndex} intersection ratio: ${entry.intersectionRatio}`);
         });
 
         let maxRatio = 0;
@@ -76,15 +76,15 @@ export default function Home() {
           }
         });
 
-        console.log('Current intersection ratios:', intersectionRatios.current);
-        console.log('Most visible section:', mostVisibleSection);
-        console.log('Current active section:', activeSection);
+        // console.log('Current intersection ratios:', intersectionRatios.current);
+        // console.log('Most visible section:', mostVisibleSection);
+        // console.log('Current active section:', activeSection);
         
         if (mostVisibleSection && (
           (mostVisibleSection as MostVisibleSection).categoryIndex !== activeSection.categoryIndex ||
           (mostVisibleSection as MostVisibleSection).sectionIndex !== activeSection.sectionIndex
         )) {
-          console.log('Updating active section to:', mostVisibleSection);
+          // console.log('Updating active section to:', mostVisibleSection);
           setActiveSection(mostVisibleSection);
         }
       },
@@ -95,16 +95,16 @@ export default function Home() {
       }
     );
 
-    console.log('Sections to observe:', Object.keys(sectionRefs.current));
+    // console.log('Sections to observe:', Object.keys(sectionRefs.current));
     Object.entries(sectionRefs.current).forEach(([key, section]) => {
       if (section) {
         observer.observe(section);
-        console.log(`Observing section: ${key}`);
+        // console.log(`Observing section: ${key}`);
       }
     });
 
     return () => {
-      console.log('Cleaning up Intersection Observer');
+      // console.log('Cleaning up Intersection Observer');
       Object.values(sectionRefs.current).forEach((section) => {
         if (section) {
           observer.unobserve(section);
@@ -113,8 +113,22 @@ export default function Home() {
     };
   }, [activeSection]);
 
+  useEffect(() => {
+    console.log(`%c
+      _____ _                 _    __   __            
+     |_   _| |               | |   \\ \\ / /            
+       | | | |__   __ _ _ __ | | __ \\ V /  ___  _   _ 
+       | | | '_ \\ / _\` | '_ \\| |/ /  \\ / /  _ \\| | | |
+       | | | | | | (_| | | | |   <   | | | (_) | |_| |
+       \\_/ |_| |_|\\__,_|_| |_|_|\\_\\  \\_/  \\___/ \\__,_|
+                                                      
+     `, 'font-family: monospace; font-size: 14px; font-weight: bold; color: #4ecdc4');
+     
+     console.log("%cSeriously, I appreciate the visit and I'm honored you're looking under the hood! If you're here, you're probably interested in the nuances - be sure to check out the logic for the side-nav bar animations on desktop, the refs for scrolling, how skill tags, jobs, projects are generated, and the hover effects!", "font-size: 16px; color: #ff6b6b; font-weight: bold;");
+  },[])
+
   const scrollToSection = useCallback((categoryIndex: number, sectionIndex: number) => {
-    console.log(`Scrolling to section: ${categoryIndex}-${sectionIndex}`);
+    // console.log(`Scrolling to section: ${categoryIndex}-${sectionIndex}`);
     const sectionId = `${categoryIndex}-${sectionIndex}`;
     const sectionElement = sectionRefs.current[sectionId];
     if (sectionElement && scrollContainerRef.current) {
@@ -123,11 +137,11 @@ export default function Home() {
   }, []);
 
   const scrollToCategory = (categoryIndex: number) => {
-    console.log(`Scrolling to category: ${categoryIndex}`);
+    // console.log(`Scrolling to category: ${categoryIndex}`);
     scrollToSection(categoryIndex, 0);
   };
 
-  console.log('Rendering with active section:', activeSection);
+  // console.log('Rendering with active section:', activeSection);
 
   return (
     
@@ -231,7 +245,7 @@ export default function Home() {
                   ref={(el) => {
                     if (el) {
                       sectionRefs.current[`${categoryIndex}-${sectionIndex}`] = el;
-                      console.log(`Ref set for section: ${categoryIndex}-${sectionIndex}`);
+                      // console.log(`Ref set for section: ${categoryIndex}-${sectionIndex}`);
                     }
                   }}
                   className="w-full mb-4"
