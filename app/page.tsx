@@ -163,7 +163,7 @@ export default function Home() {
                     {category.sections.map((section, sectionIndex) => (
                       <div 
                         key={sectionIndex} 
-                        className="pl-4 py-1 cursor-pointer"
+                        className="pl-4 py-1 cursor-pointer hover:font-bold"
                         onClick={() => {
                           scrollToSection(categoryIndex, sectionIndex);
                           setIsDropdownOpen(false);
@@ -184,7 +184,7 @@ export default function Home() {
               <div key={categoryIndex} className="relative">
                 <div 
                   className={`cursor-pointer px-2 py-1 rounded ${
-                    activeSection.categoryIndex === categoryIndex ? 'font-bold' : 'font-light'
+                    activeSection.categoryIndex === categoryIndex ? 'font-bold hover:font-bold' : 'font-light hover:font-medium'
                   }`} 
                   onClick={() => scrollToCategory(categoryIndex)}
                 >
@@ -196,8 +196,8 @@ export default function Home() {
                       key={sectionIndex}
                       className={`cursor-pointer px-2 py-1 rounded relative w-fit ${
                         activeSection.categoryIndex === categoryIndex && activeSection.sectionIndex === sectionIndex 
-                          ? 'font-bold' 
-                          : 'font-light'
+                          ? 'font-bold hover:font-bold' 
+                          : 'font-light hover:font-medium'
                       }`}
                       onClick={() => scrollToSection(categoryIndex, sectionIndex)}
                     >
